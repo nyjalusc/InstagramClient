@@ -26,4 +26,7 @@ dependencies {
     compile 'com.loopj.android:android-async-http:1.4.5'
     // load images from the network into image views
     compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.android.support:support-v4:21.0.3'
+    // library to show rounded images
+    compile 'com.makeramen:roundedimageview:2.0.1'
 }

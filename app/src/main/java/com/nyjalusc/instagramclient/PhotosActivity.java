@@ -1,8 +1,8 @@
 package com.nyjalusc.instagramclient;
 
+import android.app.Activity;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
@@ -18,11 +18,13 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 
-public class PhotosActivity extends ActionBarActivity {
+public class PhotosActivity extends Activity {
 
     public static final String CLIENT_ID = "04fa4220195c4f3fa75611784ff3842a";
     private ArrayList<InstagramPhoto> photos;
-    private  InstagramPhotosAdapter aPhotos;
+    private InstagramPhotosAdapter aPhotos;
+    private SwipeRefreshLayout swipeContainer;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,21 +40,29 @@ public class PhotosActivity extends ActionBarActivity {
         lvPhotos.setAdapter(aPhotos);
         // Fetch the photos
         fetchPopularPhotos();
+        swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
+        // Setup refresh listener which triggers new data loading
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Your code to refresh the list here.
+                // Make sure you call swipeContainer.setRefreshing(false)
+                // once the network request has completed successfully.
+                fetchPopularPhotos();
 
+            }
+        });
+        // Configure the refreshing colors
+        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
     }
 
     // Trgger API request
     public void fetchPopularPhotos() {
-//        IG Popular: https://api.instagram.com/v1/media/popular?access_token=ACCESS-TOKEN
-//        04fa4220195c4f3fa75611784ff3842a
-//                Response
-//        Type:  { “data” => [x] => “type”} (“image” or “video”)
-//        URL:  {“data” => [x] => “images” => “standard_resolution” => “url"}
-//            Caption: {“data” => [x] => “caption” => “text”}
-//            Author:  {“data” => [x] => “user” => “username”}
-
         String url = "https://api.instagram.com/v1/media/popular?client_id=" + CLIENT_ID;
-        // Crate the client
+        // Create the client
         AsyncHttpClient client = new AsyncHttpClient();
         // Trigger the GET Request
         client.get(url, null, new JsonHttpResponseHandler() {
@@ -60,11 +70,13 @@ public class PhotosActivity extends ActionBarActivity {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 // Expecting a JSONobject
-                //        Type:  { “data” => [x] => “type”} (“image” or “video”)
-                //        URL:  {“data” => [x] => “images” => “standard_resolution” => “url"}
-                //            Caption: {“data” => [x] => “caption” => “text”}
-                //            Author:  {“data” => [x] => “user” => “username”}
-                //
+                // Type:  { “data” => [x] => “type”} (“image” or “video”)
+                // URL:  {“data” => [x] => “images” => “standard_resolution” => “url"}
+                // Caption: {“data” => [x] => “caption” => “text”}
+                // Author:  {“data” => [x] => “user” => “username”}
+
+                // This is done to refresh the contents of the adapter
+                aPhotos.clear();
                 JSONArray photosJSON = null;
                 try {
                    photosJSON = response.getJSONArray("data"); // Get the data
@@ -76,8 +88,14 @@ public class PhotosActivity extends ActionBarActivity {
                        InstagramPhoto photo = new InstagramPhoto();
                        // Author:  {“data” => [x] => “user” => “username”}
                        photo.username = photoJSON.getJSONObject("user").getString("username");
+                       photo.profilePicURL = photoJSON.getJSONObject("user").getString("profile_picture");
                        // Caption: {“data” => [x] => “caption” => “text”}
-                       photo.caption = photoJSON.getJSONObject("caption").getString("text");
+                       // Caption: {“data” => [x] => “caption” => “text”}
+                       if (photoJSON.optJSONObject("caption") != null) {
+                           photo.caption = photoJSON.getJSONObject("caption").getString("text");
+                       } else {
+                           photo.caption = "";
+                       }
                        // URL:  {“data” => [x] => “images” => “standard_resolution” => “url"}
                        photo.imageURL = photoJSON.getJSONObject("images").getJSONObject("standard_resolution").getString("url");
                        // Type:  { “data” => [x] => “type”} (“image” or “video”)
@@ -91,7 +109,8 @@ public class PhotosActivity extends ActionBarActivity {
                 } catch (JSONException e) {
                    e.printStackTrace();
                 }
-
+                // Now we call setRefreshing(false) to signal refresh has finished
+                swipeContainer.setRefreshing(false);
                 // Callback refreshes the listView
                 aPhotos.notifyDataSetChanged();
             }
@@ -100,7 +119,6 @@ public class PhotosActivity extends ActionBarActivity {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
             }
-
         });
     }
 

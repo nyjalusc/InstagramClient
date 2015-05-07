@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.makeramen.roundedimageview.RoundedImageView;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -16,6 +17,7 @@ public class InstagramPhotosAdapter extends ArrayAdapter<InstagramPhoto> {
 
     // View lookup cache
     public static class ViewHolder {
+        RoundedImageView ivProfileImage;
         TextView tvUsername;
         TextView tvCaption;
         ImageView ivPhoto;
@@ -42,6 +44,7 @@ public class InstagramPhotosAdapter extends ArrayAdapter<InstagramPhoto> {
             viewHolder.tvUsername = (TextView) convertView.findViewById(R.id.tvUsername);
             viewHolder.tvCaption = (TextView) convertView.findViewById(R.id.tvCaption);
             viewHolder.ivPhoto = (ImageView) convertView.findViewById(R.id.ivPhoto);
+            viewHolder.ivProfileImage = (RoundedImageView) convertView.findViewById(R.id.ivProfileImage);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -54,6 +57,8 @@ public class InstagramPhotosAdapter extends ArrayAdapter<InstagramPhoto> {
         viewHolder.ivPhoto.setImageResource(0);
         // Insert the image using picasso (sends out async request)
         Picasso.with(getContext()).load(photo.imageURL).fit().centerCrop().placeholder(R.mipmap.ic_launcher).into(viewHolder.ivPhoto);
+        // The rounded image styling is done through the layout
+        Picasso.with(getContext()).load(photo.profilePicURL).into(viewHolder.ivProfileImage);
 
         // Return the created item as a view
         return  convertView;
