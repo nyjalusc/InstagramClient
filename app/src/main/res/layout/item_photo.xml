@@ -26,39 +26,42 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             app:riv_corner_radius="30dip"
-            app:riv_border_width="1dip"
+            app:riv_border_width="0.5dip"
             app:riv_border_color="@color/grey"
             app:riv_oval="false"
-            android:padding="8dp"/>
+            android:padding="5dp"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:id="@+id/tvUsername"
+            android:textSize="17sp"
             android:layout_toRightOf="@+id/ivProfileImage"
             android:text="New Text"
             android:textColor="@color/dark_blue"
-            android:id="@+id/tvUsername"
             android:layout_centerInParent="true"
-            android:textStyle="bold"/>
+            android:textStyle="normal"/>
         <!--android:ellipsize="end"-->
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/time_icon_24px"
+            android:id="@+id/ivClockLogo"
+            android:src="@drawable/clock"
             android:layout_centerInParent="true"
-            android:layout_toLeftOf="@+id/tvTimeElapsed"
-            android:id="@+id/ivClockLogo"/>
+            android:layout_toLeftOf="@+id/tvTimeElapsed"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
             android:id="@+id/tvTimeElapsed"
             android:layout_alignParentRight="true"
             android:text="New Text"
+            android:textSize="16sp"
             android:textColor="@color/ligh_grey"
             android:layout_centerInParent="true"
-            android:textStyle="bold"/>
+            android:textStyle="normal"/>
 
     </RelativeLayout>
 
