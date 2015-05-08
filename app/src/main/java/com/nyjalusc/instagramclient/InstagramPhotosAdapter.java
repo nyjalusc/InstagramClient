@@ -15,12 +15,15 @@ import java.util.List;
 
 public class InstagramPhotosAdapter extends ArrayAdapter<InstagramPhoto> {
 
+    private static final TimeFormatter timeFormatter = new TimeFormatter();
+
     // View lookup cache
     public static class ViewHolder {
         RoundedImageView ivProfileImage;
         TextView tvUsername;
         TextView tvCaption;
         ImageView ivPhoto;
+        TextView tvTimeElapsed;
     }
 
     // What data we need from the activity
@@ -45,6 +48,7 @@ public class InstagramPhotosAdapter extends ArrayAdapter<InstagramPhoto> {
             viewHolder.tvCaption = (TextView) convertView.findViewById(R.id.tvCaption);
             viewHolder.ivPhoto = (ImageView) convertView.findViewById(R.id.ivPhoto);
             viewHolder.ivProfileImage = (RoundedImageView) convertView.findViewById(R.id.ivProfileImage);
+            viewHolder.tvTimeElapsed = (TextView) convertView.findViewById(R.id.tvTimeElapsed);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -59,6 +63,10 @@ public class InstagramPhotosAdapter extends ArrayAdapter<InstagramPhoto> {
         Picasso.with(getContext()).load(photo.imageURL).fit().centerCrop().placeholder(R.mipmap.ic_launcher).into(viewHolder.ivPhoto);
         // The rounded image styling is done through the layout
         Picasso.with(getContext()).load(photo.profilePicURL).into(viewHolder.ivProfileImage);
+
+        // Time is formatted in terms of weeks, days, hours and mintues (Like instagram does)
+        String formattedTime = timeFormatter.getTime(photo.createdTime);
+        viewHolder.tvTimeElapsed.setText(formattedTime);
 
         // Return the created item as a view
         return  convertView;

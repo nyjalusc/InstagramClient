@@ -8,4 +8,5 @@ public class InstagramPhoto {
     public int imageHeight;
     public int likesCount;
     public String type;
+    public String createdTime;
 }

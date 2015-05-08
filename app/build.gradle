@@ -29,4 +29,6 @@ dependencies {
     compile 'com.android.support:support-v4:21.0.3'
     // library to show rounded images
     compile 'com.makeramen:roundedimageview:2.0.1'
+    // For performing date time arithmetic
+    compile "joda-time:joda-time:2.2"
 }

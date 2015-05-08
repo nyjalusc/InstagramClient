@@ -24,6 +24,7 @@ public class PhotosActivity extends Activity {
     private ArrayList<InstagramPhoto> photos;
     private InstagramPhotosAdapter aPhotos;
     private SwipeRefreshLayout swipeContainer;
+    private TimeFormatter timeFormatter;
 
 
     @Override
@@ -57,6 +58,8 @@ public class PhotosActivity extends Activity {
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
+
+        timeFormatter = new TimeFormatter();
     }
 
     // Trgger API request
@@ -102,6 +105,10 @@ public class PhotosActivity extends Activity {
                        photo.type = photoJSON.getString("type");
                        photo.imageHeight = photoJSON.getJSONObject("images").getJSONObject("standard_resolution").getInt("height");
                        photo.likesCount = photoJSON.getJSONObject("likes").getInt("count");
+                       photo.createdTime = photoJSON.getString("created_time");
+
+
+                       timeFormatter.getTime(photo.createdTime);
 
                        // Add to the arraylist
                        photos.add(photo);
