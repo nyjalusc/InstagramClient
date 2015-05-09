@@ -1,11 +1,13 @@
 package com.nyjalusc.instagramclient;
 
 import android.content.Context;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.makeramen.roundedimageview.RoundedImageView;
@@ -24,6 +26,8 @@ public class InstagramPhotosAdapter extends ArrayAdapter<InstagramPhoto> {
         TextView tvCaption;
         ImageView ivPhoto;
         TextView tvTimeElapsed;
+        TextView tvLikesCount;
+        LinearLayout commentsHolder;
     }
 
     // What data we need from the activity
@@ -49,6 +53,8 @@ public class InstagramPhotosAdapter extends ArrayAdapter<InstagramPhoto> {
             viewHolder.ivPhoto = (ImageView) convertView.findViewById(R.id.ivPhoto);
             viewHolder.ivProfileImage = (RoundedImageView) convertView.findViewById(R.id.ivProfileImage);
             viewHolder.tvTimeElapsed = (TextView) convertView.findViewById(R.id.tvTimeElapsed);
+            viewHolder.tvLikesCount = (TextView) convertView.findViewById(R.id.tvLikesCount);
+            viewHolder.commentsHolder = (LinearLayout) convertView.findViewById(R.id.commentsHolder);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -57,6 +63,9 @@ public class InstagramPhotosAdapter extends ArrayAdapter<InstagramPhoto> {
         // Insert the model data into each of the view items
         viewHolder.tvUsername.setText(photo.username);
         viewHolder.tvCaption.setText(" -- " + photo.caption);
+        // NOTE: not required at the moment
+        viewHolder.tvCaption.setVisibility(View.GONE);
+
         // Clear out the imageView because listView might show the same photo again if its recycling
         viewHolder.ivPhoto.setImageResource(0);
         // Insert the image using picasso (sends out async request)
@@ -67,6 +76,21 @@ public class InstagramPhotosAdapter extends ArrayAdapter<InstagramPhoto> {
         // Time is formatted in terms of weeks, days, hours and mintues (Like instagram does)
         String formattedTime = timeFormatter.getTime(photo.createdTime);
         viewHolder.tvTimeElapsed.setText(formattedTime);
+
+        // Set the text for displaying likes count
+        viewHolder.tvLikesCount.setText(photo.getLikesCount());
+
+        // Remove all the old views
+        viewHolder.commentsHolder.removeAllViews();
+        // Show the last 2 comments
+        for(String commentText : photo.getFormattedComments()) {
+            View commentRow = LayoutInflater.from(getContext()).inflate(R.layout.comment_row, parent, false);
+            LinearLayout llCommentRow = (LinearLayout) commentRow.findViewById(R.id.llCommentsHolder);
+            TextView tvComment = (TextView) commentRow.findViewById(R.id.tvComment);
+            tvComment.setText(Html.fromHtml(commentText));
+            // IMPORTANT: Add the the whole container (along with LinearLayout) and not just the textView (child)
+            viewHolder.commentsHolder.addView(llCommentRow);
+        }
 
         // Return the created item as a view
         return  convertView;

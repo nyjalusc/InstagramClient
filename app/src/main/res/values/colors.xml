@@ -6,6 +6,6 @@
     <item name="grey" type="color">#9E9E9E</item>
     <item name="ligh_grey" type="color">#bdbdbd</item>
     <item name="pink" type="color">#FFCDD2</item>
-    <item name="dark_blue" type="color">#0D47A1</item>
-    <item name="likes_color" type="color">#1f5078</item>
+    <item name="dark_blue" type="color">#01579b</item>
+    <item name="likes_color" type="color">#01579b</item>
 </resources>

@@ -16,6 +16,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 
 public class PhotosActivity extends Activity {
@@ -107,6 +108,19 @@ public class PhotosActivity extends Activity {
                        photo.likesCount = photoJSON.getJSONObject("likes").getInt("count");
                        photo.createdTime = photoJSON.getString("created_time");
 
+                       // COMMENTS
+                       JSONArray comments = photoJSON.getJSONObject("comments").getJSONArray("data");
+                       // Initialize the linkedHashMap..This is to presever the ordering
+                       // The ordering will be used later to fetch the latest N comments
+                       photo.comments = new LinkedHashMap<String, String>();
+                       // Add all comments to the arraylist
+                       for(int j=0; j < comments.length(); j++) {
+                           JSONObject comment = comments.getJSONObject(j);
+                           String commentText = comment.getString("text");
+                           JSONObject commenterInfo = comment.getJSONObject("from");
+                           String commenterName = commenterInfo.getString("username");
+                           photo.comments.put(commenterName, commentText);
+                       }
 
                        timeFormatter.getTime(photo.createdTime);
 
