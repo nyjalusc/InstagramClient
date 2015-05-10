@@ -40,7 +40,7 @@ public class PhotosActivity extends Activity {
         photos = new ArrayList<InstagramPhoto>();
         // Create the Adapter
         aPhotos = new InstagramPhotosAdapter(this, photos);
-       // Find the listView from the adapter
+        // Find the listView from the adapter
         ListView lvPhotos = (ListView) findViewById(R.id.lvPhotos);
         // Connect the adapter to the listView
         lvPhotos.setAdapter(aPhotos);
@@ -68,6 +68,8 @@ public class PhotosActivity extends Activity {
     }
 
     // Trgger API request
+    // Documentation of the endpoint can be found here: https://instagram.com/developer/endpoints/media/
+    // Checkout /media/popular endpoint
     public void fetchPopularPhotos() {
         String url = "https://api.instagram.com/v1/media/popular?client_id=" + CLIENT_ID;
         // Create the client
@@ -78,61 +80,60 @@ public class PhotosActivity extends Activity {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 // Expecting a JSONobject
-                // Type:  { “data” => [x] => “type”} (“image” or “video”)
-                // URL:  {“data” => [x] => “images” => “standard_resolution” => “url"}
-                // Caption: {“data” => [x] => “caption” => “text”}
-                // Author:  {“data” => [x] => “user” => “username”}
-
                 // This is done to refresh the contents of the adapter
                 aPhotos.clear();
                 JSONArray photosJSON = null;
                 try {
-                   photosJSON = response.getJSONArray("data"); // Get the data
-                   // iterate
-                   for (int i=0; i < photosJSON.length(); i++) {
-                       // Get the json object
-                       JSONObject photoJSON = photosJSON.getJSONObject(i);
-                       // Decode the attribute of the JSON in data model
-                       InstagramPhoto photo = new InstagramPhoto();
-                       photo.id = photoJSON.getString("id");
-                       // Author:  {“data” => [x] => “user” => “username”}
-                       photo.username = photoJSON.getJSONObject("user").getString("username");
-                       photo.profilePicURL = photoJSON.getJSONObject("user").getString("profile_picture");
-                       // Caption: {“data” => [x] => “caption” => “text”}
-                       // Caption: {“data” => [x] => “caption” => “text”}
-                       if (photoJSON.optJSONObject("caption") != null) {
-                           photo.caption = photoJSON.getJSONObject("caption").getString("text");
-                       } else {
-                           photo.caption = "";
-                       }
-                       // URL:  {“data” => [x] => “images” => “standard_resolution” => “url"}
-                       photo.imageURL = photoJSON.getJSONObject("images").getJSONObject("standard_resolution").getString("url");
-                       // Type:  { “data” => [x] => “type”} (“image” or “video”)
-                       photo.type = photoJSON.getString("type");
-                       photo.imageHeight = photoJSON.getJSONObject("images").getJSONObject("standard_resolution").getInt("height");
-                       photo.likesCount = photoJSON.getJSONObject("likes").getInt("count");
-                       photo.createdTime = photoJSON.getString("created_time");
+                    photosJSON = response.getJSONArray("data"); // Get the data
+                    // iterate
+                    for (int i=0; i < photosJSON.length(); i++) {
+                        // Get the json object
+                        JSONObject photoJSON = photosJSON.getJSONObject(i);
+                        // Populate data model
+                        InstagramPhoto photo = new InstagramPhoto();
+                        photo.id = photoJSON.getString("id");
+                        photo.username = photoJSON.getJSONObject("user").getString("username");
+                        photo.profilePicURL = photoJSON.getJSONObject("user").getString("profile_picture");
 
-                       // COMMENTS
-                       photo.commentsCount = photoJSON.getJSONObject("comments").getInt("count");
-                       JSONArray comments = photoJSON.getJSONObject("comments").getJSONArray("data");
-                       // Initialize the linkedHashMap..This is to presever the ordering
-                       // The ordering will be used later to fetch the latest N comments
-                       photo.comments = new LinkedHashMap<String, String>();
-                       // Add all comments to the arraylist
-                       for(int j=0; j < comments.length(); j++) {
-                           JSONObject comment = comments.getJSONObject(j);
-                           String commentText = comment.getString("text");
-                           JSONObject commenterInfo = comment.getJSONObject("from");
-                           String commenterName = commenterInfo.getString("username");
-                           photo.comments.put(commenterName, commentText);
-                       }
+                        // Caption can be null; Handle it here
+                        if (photoJSON.optJSONObject("caption") != null) {
+                            photo.caption = photoJSON.getJSONObject("caption").getString("text");
+                        } else {
+                            photo.caption = "";
+                        }
 
-                       // Add to the arraylist
-                       photos.add(photo);
-                   }
+                        photo.type = photoJSON.getString("type");
+                        if (photo.type.equals("video")) {
+                            // Save the video url
+                            photo.videoURL = photoJSON.getJSONObject("videos").getJSONObject("standard_resolution").getString("url");
+                        }
+                        // All videos have images but vice-versa is not true
+                        photo.imageURL = photoJSON.getJSONObject("images").getJSONObject("standard_resolution").getString("url");
+                        photo.mediaURL = photoJSON.getString("link");
+                        photo.imageHeight = photoJSON.getJSONObject("images").getJSONObject("standard_resolution").getInt("height");
+                        photo.likesCount = photoJSON.getJSONObject("likes").getInt("count");
+                        photo.createdTime = photoJSON.getString("created_time");
+
+                        // COMMENTS
+                        photo.commentsCount = photoJSON.getJSONObject("comments").getInt("count");
+                        JSONArray comments = photoJSON.getJSONObject("comments").getJSONArray("data");
+                        // Initialize the linkedHashMap..This is to presever the ordering
+                        // The ordering will be used later to fetch the latest N comments
+                        photo.comments = new LinkedHashMap<String, String>();
+                        // Add all comments to the arraylist
+                        for(int j=0; j < comments.length(); j++) {
+                            JSONObject comment = comments.getJSONObject(j);
+                            String commentText = comment.getString("text");
+                            JSONObject commenterInfo = comment.getJSONObject("from");
+                            String commenterName = commenterInfo.getString("username");
+                            photo.comments.put(commenterName, commentText);
+                        }
+
+                        // Add to the arraylist
+                        photos.add(photo);
+                    }
                 } catch (JSONException e) {
-                   e.printStackTrace();
+                    e.printStackTrace();
                 }
                 // Now we call setRefreshing(false) to signal refresh has finished
                 swipeContainer.setRefreshing(false);
@@ -169,13 +170,35 @@ public class PhotosActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Launches Comments activity when the user clicks on "View all comments" textView
+     * @param view
+     */
     public void launchCommentsActivity(View view) {
         String mediaId = view.getTag().toString();
         // first parameter is the context, second is the class of the activity to launch
         Intent i = new Intent(PhotosActivity.this, CommentsActivity.class);
         i.putExtra("mediaId", mediaId);
+        // brings up the Comments activity
+        startActivityForResult(i, REQUEST_CODE);
+    }
 
-        // REQUEST_CODE will be used to evaluate the result of the second (child) activity
-        startActivityForResult(i, REQUEST_CODE); // brings up the second activity
+    /**
+     * Called when user clicks on the photo
+     * It will launch video activity if "type" of media is video
+     * @param view
+     */
+    public void playIfVideo(View view) {
+        Object videoURL = view.getTag();
+        if (videoURL == null) {
+            // Do nothing
+            return;
+        }
+        String url = videoURL.toString();
+        // first parameter is the context, second is the class of the activity to launch
+        Intent i = new Intent(PhotosActivity.this, VideoActivity.class);
+        i.putExtra("videoURL", url);
+        // brings up the Video activity
+        startActivityForResult(i, REQUEST_CODE);
     }
 }

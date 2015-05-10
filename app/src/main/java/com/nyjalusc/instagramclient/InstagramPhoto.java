@@ -13,6 +13,8 @@ public class InstagramPhoto {
     public String profilePicURL;
     public String caption;
     public String imageURL;
+    public String videoURL;
+    public String mediaURL;
     public int imageHeight;
     public int likesCount;
     public int commentsCount;
@@ -61,6 +63,10 @@ public class InstagramPhoto {
 
     public String getFormattedCaption() {
         return formatUserName() + " " + formatString(this.caption);
+    }
+
+    public boolean isVideo() {
+        return this.type.equals("video");
     }
 
     private String formatComment(String username, String commentText) {

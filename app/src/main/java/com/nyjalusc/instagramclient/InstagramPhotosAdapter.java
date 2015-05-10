@@ -28,6 +28,7 @@ public class InstagramPhotosAdapter extends ArrayAdapter<InstagramPhoto> {
         TextView tvTimeElapsed;
         TextView tvLikesCount;
         TextView tvCommentsCount;
+        ImageView ivPlayLogo;
         LinearLayout commentsHolder;
     }
 
@@ -52,6 +53,7 @@ public class InstagramPhotosAdapter extends ArrayAdapter<InstagramPhoto> {
             viewHolder.tvUsername = (TextView) convertView.findViewById(R.id.tvUsername);
             viewHolder.tvCaption = (TextView) convertView.findViewById(R.id.tvCaption);
             viewHolder.ivPhoto = (ImageView) convertView.findViewById(R.id.ivPhoto);
+            viewHolder.ivPlayLogo = (ImageView) convertView.findViewById(R.id.ivPlayLogo);
             viewHolder.ivProfileImage = (RoundedImageView) convertView.findViewById(R.id.ivProfileImage);
             viewHolder.tvTimeElapsed = (TextView) convertView.findViewById(R.id.tvTimeElapsed);
             viewHolder.tvLikesCount = (TextView) convertView.findViewById(R.id.tvLikesCount);
@@ -72,6 +74,17 @@ public class InstagramPhotosAdapter extends ArrayAdapter<InstagramPhoto> {
         Picasso.with(getContext()).load(photo.imageURL).fit().centerCrop().placeholder(R.mipmap.ic_launcher).into(viewHolder.ivPhoto);
         // The rounded image styling is done through the layout
         Picasso.with(getContext()).load(photo.profilePicURL).into(viewHolder.ivProfileImage);
+
+        // Make the video play logo disapper if type = image otherwise embed the videoURL as a tag
+        // the url will be used later to play the video if the user clicks on the image
+        // Explicitly set the visibility of play logo for every item
+        if (!photo.isVideo()) {
+            viewHolder.ivPlayLogo.setVisibility(View.GONE);
+            viewHolder.ivPhoto.setTag(null);
+        } else {
+            viewHolder.ivPlayLogo.setVisibility(View.VISIBLE);
+            viewHolder.ivPhoto.setTag(photo.videoURL);
+        }
 
         // Time is formatted in terms of weeks, days, hours and mintues (Like instagram does)
         String formattedTime = timeFormatter.getTimeShort(photo.createdTime);
@@ -95,8 +108,6 @@ public class InstagramPhotosAdapter extends ArrayAdapter<InstagramPhoto> {
             // IMPORTANT: Add the the whole container (along with LinearLayout) and not just the textView (child)
             viewHolder.commentsHolder.addView(llCommentRow);
         }
-
-
         // Return the created item as a view
         return  convertView;
     }
