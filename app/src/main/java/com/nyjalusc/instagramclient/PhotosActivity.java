@@ -128,8 +128,6 @@ public class PhotosActivity extends Activity {
                            photo.comments.put(commenterName, commentText);
                        }
 
-                       timeFormatter.getTime(photo.createdTime);
-
                        // Add to the arraylist
                        photos.add(photo);
                    }

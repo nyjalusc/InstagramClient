@@ -1,7 +1,7 @@
 package com.nyjalusc.instagramclient;
 
+import android.app.Activity;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,7 +17,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 
-public class CommentsActivity extends ActionBarActivity {
+public class CommentsActivity extends Activity {
 
     private static final String CLIENT_ID = "04fa4220195c4f3fa75611784ff3842a";
     private ListView lvComments;

@@ -14,6 +14,7 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 public class InstagramCommentsAdapter extends ArrayAdapter<InstagramComment> {
+    TimeFormatter timeFormatter;
     // View lookup cache
     public static class ViewHolder {
         RoundedImageView ivProfileImage;
@@ -23,6 +24,7 @@ public class InstagramCommentsAdapter extends ArrayAdapter<InstagramComment> {
 
     public InstagramCommentsAdapter(Context context, List<InstagramComment> objects) {
         super(context, android.R.layout.simple_list_item_1, objects);
+        timeFormatter = new TimeFormatter();
     }
 
     // Use the template to display each comment
@@ -43,7 +45,7 @@ public class InstagramCommentsAdapter extends ArrayAdapter<InstagramComment> {
         }
 
         viewHolder.tvCommentText.setText(Html.fromHtml(comment.getComment()));
-        viewHolder.tvTimeElapsed.setText(comment.getRelativeTimeStamp());
+        viewHolder.tvTimeElapsed.setText(timeFormatter.getTime(comment.createdTime));
         Picasso.with(getContext()).load(comment.profilePicURL).into(viewHolder.ivProfileImage);
 
         return convertView;

@@ -74,7 +74,7 @@ public class InstagramPhotosAdapter extends ArrayAdapter<InstagramPhoto> {
         Picasso.with(getContext()).load(photo.profilePicURL).into(viewHolder.ivProfileImage);
 
         // Time is formatted in terms of weeks, days, hours and mintues (Like instagram does)
-        String formattedTime = timeFormatter.getTime(photo.createdTime);
+        String formattedTime = timeFormatter.getTimeShort(photo.createdTime);
         viewHolder.tvTimeElapsed.setText(formattedTime);
 
         // Set the text for displaying likes count
