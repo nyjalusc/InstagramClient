@@ -5,13 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!--<ImageView-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:id="@+id/ivProfileImage"-->
-    <!--android:layout_alignParentTop="true"-->
-    <!--android:layout_alignParentLeft="true"-->
-    <!--android:adjustViewBounds="false" />-->
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/usernameHolder"
@@ -38,6 +31,7 @@
             android:layout_toRightOf="@+id/ivProfileImage"
             android:layout_toLeftOf="@+id/ivClockLogo"
             android:layout_centerInParent="true">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -45,7 +39,7 @@
                 android:textSize="17sp"
                 android:textColor="@color/dark_blue"
                 android:textStyle="normal"/>
-            <!--android:ellipsize="end"-->
+
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -113,8 +107,6 @@
         android:layout_below="@+id/usernameHolder"
         android:layout_alignParentRight="true"/>
 
-    <!--android:textSize="20sp"-->
-
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/likesHolder"
@@ -140,6 +132,7 @@
             android:textColor="@color/likes_color"
             android:textStyle="bold"
             android:layout_toRightOf="@+id/ivLikesLogo"/>
+
     </RelativeLayout>
 
     <TextView

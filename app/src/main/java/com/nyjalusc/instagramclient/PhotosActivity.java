@@ -161,12 +161,7 @@ public class PhotosActivity extends Activity {
         });
     }
 
-    /**
-     * Reference: http://stackoverflow.com/questions/9409195/how-to-get-complete-address-from-latitude-and-longitude
-     * @param latitude
-     * @param longitude
-     * @return
-     */
+    // Reference: http://stackoverflow.com/questions/9409195/how-to-get-complete-address-from-latitude-and-longitude
     private String getAddress(Double latitude, Double longitude) {
         Geocoder geocoder;
         List<Address> addresses;
@@ -223,10 +218,7 @@ public class PhotosActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * Launches Comments activity when the user clicks on "View all comments" textView
-     * @param view
-     */
+    // Launches Comments activity when the user clicks on "View all comments" textView
     public void launchCommentsActivity(View view) {
         String mediaId = view.getTag().toString();
         // first parameter is the context, second is the class of the activity to launch
@@ -239,7 +231,6 @@ public class PhotosActivity extends Activity {
     /**
      * Called when user clicks on the photo
      * It will launch video activity if "type" of media is video
-     * @param view
      */
     public void playIfVideo(View view) {
         Object videoURL = view.getTag();

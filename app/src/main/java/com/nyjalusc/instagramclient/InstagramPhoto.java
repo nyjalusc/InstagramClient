@@ -7,6 +7,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+// TODO: This class should be renamed to InstagramMedia
 public class InstagramPhoto {
     public String id;
     public String username;
@@ -20,6 +21,7 @@ public class InstagramPhoto {
     public int commentsCount;
     public String type;
     public String createdTime;
+    // TODO: Comments should be represented as ArrayList<InstagramComment>
     // <username_of_commenter, comment>
     public Map<String, String> comments;
     public String location;
@@ -74,11 +76,7 @@ public class InstagramPhoto {
         return formatUserName() + " " + formatString(commentText);
     }
 
-    /**
-     * This is to format and color the @mentions and #hashtags in comment strings
-     * @param commentText
-     * @return
-     */
+    // This is to format and color the @mentions and #hashtags in comment strings
     private String formatString(String commentText) {
         StringBuilder sb = new StringBuilder();
         String[] words = commentText.split(" ");
@@ -93,10 +91,7 @@ public class InstagramPhoto {
         return sb.toString();
     }
 
-    /**
-     * Style the username
-     * @return
-     */
+    // Style the username
     private String formatUserName() {
         // getResources().getColor(R.color.dark_blue) won't work here;
         return "<b><font color=\"" + DARK_BLUE + "\">" + this.username + "</font></b>";
