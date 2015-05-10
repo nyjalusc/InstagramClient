@@ -2,8 +2,11 @@ package com.nyjalusc.instagramclient;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,6 +22,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Locale;
 
 
 public class PhotosActivity extends Activity {
@@ -114,6 +119,14 @@ public class PhotosActivity extends Activity {
                         photo.likesCount = photoJSON.getJSONObject("likes").getInt("count");
                         photo.createdTime = photoJSON.getString("created_time");
 
+                        // Get Location if the media element is geo-tagged
+                        if (photoJSON.optJSONObject("location") != null) {
+                            Double latitude = photoJSON.getJSONObject("location").getDouble("latitude");
+                            Double longitude = photoJSON.getJSONObject("location").getDouble("longitude");
+                            photo.location = getAddress(latitude, longitude);
+                            Log.d ("MEDIA", photo.location);
+                        }
+
                         // COMMENTS
                         photo.commentsCount = photoJSON.getJSONObject("comments").getInt("count");
                         JSONArray comments = photoJSON.getJSONObject("comments").getJSONArray("data");
@@ -146,6 +159,46 @@ public class PhotosActivity extends Activity {
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
             }
         });
+    }
+
+    /**
+     * Reference: http://stackoverflow.com/questions/9409195/how-to-get-complete-address-from-latitude-and-longitude
+     * @param latitude
+     * @param longitude
+     * @return
+     */
+    private String getAddress(Double latitude, Double longitude) {
+        Geocoder geocoder;
+        List<Address> addresses;
+        geocoder = new Geocoder(this, Locale.getDefault());
+        String address = "";
+        String city = "";
+        String state = "";
+
+        try {
+            addresses = geocoder.getFromLocation(latitude, longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+            address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+            city = addresses.get(0).getLocality();
+            state = addresses.get(0).getAdminArea();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return constructAddress(address, city, state);
+    }
+
+    // Removes null values and constructs a proper address string
+    private String constructAddress(String address, String city, String state) {
+        String result = "";
+        if (address != null) {
+            result += address + ", ";
+        }
+        if (city != null) {
+            result += city + ", ";
+        }
+        if (state != null) {
+            result += state;
+        }
+        return result;
     }
 
     @Override

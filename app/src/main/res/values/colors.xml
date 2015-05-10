@@ -7,5 +7,6 @@
     <item name="ligh_grey" type="color">#bdbdbd</item>
     <item name="pink" type="color">#FFCDD2</item>
     <item name="dark_blue" type="color">#01579b</item>
+    <item name="light_blue" type="color">#4999DA</item>
     <item name="likes_color" type="color">#01579b</item>
 </resources>

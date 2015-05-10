@@ -29,6 +29,8 @@ public class InstagramPhotosAdapter extends ArrayAdapter<InstagramPhoto> {
         TextView tvLikesCount;
         TextView tvCommentsCount;
         ImageView ivPlayLogo;
+        ImageView ivLocationPicker;
+        TextView tvLocation;
         LinearLayout commentsHolder;
     }
 
@@ -51,6 +53,8 @@ public class InstagramPhotosAdapter extends ArrayAdapter<InstagramPhoto> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_photo, parent, false);
             // Lookup the views for populating the data
             viewHolder.tvUsername = (TextView) convertView.findViewById(R.id.tvUsername);
+            viewHolder.ivLocationPicker = (ImageView) convertView.findViewById(R.id.ivLocationPicker);
+            viewHolder.tvLocation = (TextView) convertView.findViewById(R.id.tvLocation);
             viewHolder.tvCaption = (TextView) convertView.findViewById(R.id.tvCaption);
             viewHolder.ivPhoto = (ImageView) convertView.findViewById(R.id.ivPhoto);
             viewHolder.ivPlayLogo = (ImageView) convertView.findViewById(R.id.ivPlayLogo);
@@ -67,6 +71,16 @@ public class InstagramPhotosAdapter extends ArrayAdapter<InstagramPhoto> {
         // Insert the model data into each of the view items
         viewHolder.tvUsername.setText(photo.username);
         viewHolder.tvCaption.setText(Html.fromHtml(photo.getFormattedCaption()));
+
+        // By default it should be invsible; Explicitly do this to reset the visibility
+        viewHolder.ivLocationPicker.setVisibility(View.GONE);
+        viewHolder.tvLocation.setVisibility(View.GONE);
+        // If there is a geo-tagged location, enable the view and populate data
+        if (photo.location != null) {
+            viewHolder.tvLocation.setText(photo.location);
+            viewHolder.ivLocationPicker.setVisibility(View.VISIBLE);
+            viewHolder.tvLocation.setVisibility(View.VISIBLE);
+        }
 
         // Clear out the imageView because listView might show the same photo again if its recycling
         viewHolder.ivPhoto.setImageResource(0);

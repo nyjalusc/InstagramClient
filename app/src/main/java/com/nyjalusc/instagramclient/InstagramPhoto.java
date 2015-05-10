@@ -22,6 +22,7 @@ public class InstagramPhoto {
     public String createdTime;
     // <username_of_commenter, comment>
     public Map<String, String> comments;
+    public String location;
 
     public static final String DARK_BLUE = "#01579b";
     public static final String BLACK = "#000000";

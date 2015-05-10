@@ -32,17 +32,44 @@
             app:riv_oval="false"
             android:padding="5dp"/>
 
-        <TextView
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/tvUsername"
-            android:textSize="17sp"
             android:layout_toRightOf="@+id/ivProfileImage"
-            android:text="New Text"
-            android:textColor="@color/dark_blue"
-            android:layout_centerInParent="true"
-            android:textStyle="normal"/>
-        <!--android:ellipsize="end"-->
+            android:layout_toLeftOf="@+id/ivClockLogo"
+            android:layout_centerInParent="true">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvUsername"
+                android:textSize="17sp"
+                android:textColor="@color/dark_blue"
+                android:textStyle="normal"/>
+            <!--android:ellipsize="end"-->
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/ivLocationPicker"
+                android:visibility="gone"
+                android:src="@drawable/location_picker"
+                android:layout_marginTop="2dp"
+                android:layout_marginRight="3dp"
+                android:layout_below="@+id/tvUsername"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvLocation"
+                android:visibility="gone"
+                android:text="20 west, CA"
+                android:textColor="@color/light_blue"
+                android:layout_toRightOf="@id/ivLocationPicker"
+                android:layout_alignBottom="@+id/ivLocationPicker"
+                android:layout_marginBottom="-2.5dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textStyle="bold"/>
+        </RelativeLayout>
 
         <ImageView
             android:layout_width="wrap_content"
