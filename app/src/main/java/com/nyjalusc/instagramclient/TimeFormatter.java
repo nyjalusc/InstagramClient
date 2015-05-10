@@ -12,7 +12,7 @@ import org.joda.time.Period;
  */
 public class TimeFormatter {
 
-    public String getTime(String epoch) {
+    public String getTime(String epoch, ) {
         try {
             DateTime dt1 = new DateTime(Long.parseLong(epoch) * 1000);
             DateTime dt2 = new DateTime();

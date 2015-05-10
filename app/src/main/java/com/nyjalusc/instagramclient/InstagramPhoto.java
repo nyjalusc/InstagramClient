@@ -8,18 +8,21 @@ import java.util.Map;
 import java.util.Set;
 
 public class InstagramPhoto {
+    public String id;
     public String username;
     public String profilePicURL;
     public String caption;
     public String imageURL;
     public int imageHeight;
     public int likesCount;
+    public int commentsCount;
     public String type;
     public String createdTime;
     // <username_of_commenter, comment>
     public Map<String, String> comments;
 
     public static final String DARK_BLUE = "#01579b";
+    public static final String BLACK = "#000000";
 
     // Style the integer with "," eg. 1,000
     public String getLikesCount() {
@@ -48,8 +51,16 @@ public class InstagramPhoto {
         return result;
     }
 
+    public String getFormattedCommentsCount() {
+       return "View all "  + this.commentsCount + " comments";
+    }
+
     public ArrayList<String> getFormattedComments() {
         return getFormattedComments(2);
+    }
+
+    public String getFormattedCaption() {
+        return formatUserName() + " " + formatString(this.caption);
     }
 
     private String formatComment(String username, String commentText) {
@@ -66,7 +77,9 @@ public class InstagramPhoto {
         String[] words = commentText.split(" ");
         for (String s : words) {
            if (s.contains("@") || s.contains("#")) {
-               s = "<font color=\"" + DARK_BLUE + "\">" + s + "</font>";
+               s = "<font color=\"" + DARK_BLUE + "\">" + s + "</font> ";
+           } else {
+               s = "<font color=\"" + BLACK + "\">" + s + "</font> ";
            }
             sb.append(s);
         }

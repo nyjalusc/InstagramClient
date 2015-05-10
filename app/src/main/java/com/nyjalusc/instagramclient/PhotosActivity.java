@@ -1,10 +1,12 @@
 package com.nyjalusc.instagramclient;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ListView;
 
 import com.loopj.android.http.AsyncHttpClient;
@@ -26,6 +28,8 @@ public class PhotosActivity extends Activity {
     private InstagramPhotosAdapter aPhotos;
     private SwipeRefreshLayout swipeContainer;
     private TimeFormatter timeFormatter;
+    private ListView lvPhotos;
+    private static final int REQUEST_CODE = 20;
 
 
     @Override
@@ -90,6 +94,7 @@ public class PhotosActivity extends Activity {
                        JSONObject photoJSON = photosJSON.getJSONObject(i);
                        // Decode the attribute of the JSON in data model
                        InstagramPhoto photo = new InstagramPhoto();
+                       photo.id = photoJSON.getString("id");
                        // Author:  {“data” => [x] => “user” => “username”}
                        photo.username = photoJSON.getJSONObject("user").getString("username");
                        photo.profilePicURL = photoJSON.getJSONObject("user").getString("profile_picture");
@@ -109,6 +114,7 @@ public class PhotosActivity extends Activity {
                        photo.createdTime = photoJSON.getString("created_time");
 
                        // COMMENTS
+                       photo.commentsCount = photoJSON.getJSONObject("comments").getInt("count");
                        JSONArray comments = photoJSON.getJSONObject("comments").getJSONArray("data");
                        // Initialize the linkedHashMap..This is to presever the ordering
                        // The ordering will be used later to fetch the latest N comments
@@ -163,5 +169,15 @@ public class PhotosActivity extends Activity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void launchCommentsActivity(View view) {
+        String mediaId = view.getTag().toString();
+        // first parameter is the context, second is the class of the activity to launch
+        Intent i = new Intent(PhotosActivity.this, CommentsActivity.class);
+        i.putExtra("mediaId", mediaId);
+
+        // REQUEST_CODE will be used to evaluate the result of the second (child) activity
+        startActivityForResult(i, REQUEST_CODE); // brings up the second activity
     }
 }

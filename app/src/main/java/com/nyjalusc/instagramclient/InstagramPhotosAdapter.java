@@ -27,6 +27,7 @@ public class InstagramPhotosAdapter extends ArrayAdapter<InstagramPhoto> {
         ImageView ivPhoto;
         TextView tvTimeElapsed;
         TextView tvLikesCount;
+        TextView tvCommentsCount;
         LinearLayout commentsHolder;
     }
 
@@ -54,6 +55,7 @@ public class InstagramPhotosAdapter extends ArrayAdapter<InstagramPhoto> {
             viewHolder.ivProfileImage = (RoundedImageView) convertView.findViewById(R.id.ivProfileImage);
             viewHolder.tvTimeElapsed = (TextView) convertView.findViewById(R.id.tvTimeElapsed);
             viewHolder.tvLikesCount = (TextView) convertView.findViewById(R.id.tvLikesCount);
+            viewHolder.tvCommentsCount = (TextView) convertView.findViewById(R.id.tvCommentsCount);
             viewHolder.commentsHolder = (LinearLayout) convertView.findViewById(R.id.commentsHolder);
             convertView.setTag(viewHolder);
         } else {
@@ -62,9 +64,7 @@ public class InstagramPhotosAdapter extends ArrayAdapter<InstagramPhoto> {
 
         // Insert the model data into each of the view items
         viewHolder.tvUsername.setText(photo.username);
-        viewHolder.tvCaption.setText(" -- " + photo.caption);
-        // NOTE: not required at the moment
-        viewHolder.tvCaption.setVisibility(View.GONE);
+        viewHolder.tvCaption.setText(Html.fromHtml(photo.getFormattedCaption()));
 
         // Clear out the imageView because listView might show the same photo again if its recycling
         viewHolder.ivPhoto.setImageResource(0);
@@ -80,6 +80,10 @@ public class InstagramPhotosAdapter extends ArrayAdapter<InstagramPhoto> {
         // Set the text for displaying likes count
         viewHolder.tvLikesCount.setText(photo.getLikesCount());
 
+        // Set the text for displaying comments count
+        viewHolder.tvCommentsCount.setText(photo.getFormattedCommentsCount());
+        viewHolder.tvCommentsCount.setTag(photo.id);
+
         // Remove all the old views
         viewHolder.commentsHolder.removeAllViews();
         // Show the last 2 comments
@@ -91,6 +95,7 @@ public class InstagramPhotosAdapter extends ArrayAdapter<InstagramPhoto> {
             // IMPORTANT: Add the the whole container (along with LinearLayout) and not just the textView (child)
             viewHolder.commentsHolder.addView(llCommentRow);
         }
+
 
         // Return the created item as a view
         return  convertView;
