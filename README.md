@@ -7,7 +7,7 @@ I have completed the following features:
 - [x] For each photo displayed, user can see the following details:
       Graphic, Caption, Username, relative timestamp, like count, user profile image
 
-I also managed to finished the following optional features:
+I also managed to finish the following optional features:
 - [x] Location of geo-tagged photo is displayed
 - [x] Add pull-to-refresh for popular stream with SwipeRefreshLayout
 - [x] Show 2 latest comments for each photo
