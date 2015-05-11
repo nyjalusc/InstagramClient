@@ -120,7 +120,7 @@ public class PhotosActivity extends Activity {
                         photo.createdTime = photoJSON.getString("created_time");
 
                         // Get Location if the media element is geo-tagged
-                        if (photoJSON.optJSONObject("location") != null) {
+                        if (photoJSON.optJSONObject("location") != null ) {
                             Double latitude = photoJSON.getJSONObject("location").getDouble("latitude");
                             Double longitude = photoJSON.getJSONObject("location").getDouble("longitude");
                             photo.location = getAddress(latitude, longitude);

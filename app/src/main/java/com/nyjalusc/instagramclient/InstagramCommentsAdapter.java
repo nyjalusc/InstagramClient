@@ -46,7 +46,7 @@ public class InstagramCommentsAdapter extends ArrayAdapter<InstagramComment> {
 
         viewHolder.tvCommentText.setText(Html.fromHtml(comment.getComment()));
         viewHolder.tvTimeElapsed.setText(timeFormatter.getTime(comment.createdTime));
-        Picasso.with(getContext()).load(comment.profilePicURL).into(viewHolder.ivProfileImage);
+        Picasso.with(getContext()).load(comment.profilePicURL).placeholder(R.drawable.loading).into(viewHolder.ivProfileImage);
 
         return convertView;
     }

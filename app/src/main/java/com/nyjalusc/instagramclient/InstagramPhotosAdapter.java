@@ -85,7 +85,8 @@ public class InstagramPhotosAdapter extends ArrayAdapter<InstagramPhoto> {
         // Clear out the imageView because listView might show the same photo again if its recycling
         viewHolder.ivPhoto.setImageResource(0);
         // Insert the image using picasso (sends out async request)
-        Picasso.with(getContext()).load(photo.imageURL).fit().centerCrop().placeholder(R.mipmap.ic_launcher).into(viewHolder.ivPhoto);
+//        Picasso.with(getContext()).load(photo.imageURL).fit().centerCrop().placeholder(R.mipmap.ic_launcher).into(viewHolder.ivPhoto);
+        Picasso.with(getContext()).load(photo.imageURL).fit().centerCrop().placeholder(R.drawable.loading_larger).into(viewHolder.ivPhoto);
         // The rounded image styling is done through the layout
         Picasso.with(getContext()).load(photo.profilePicURL).into(viewHolder.ivProfileImage);
 
